@@ -18,10 +18,18 @@ If (-not (Test-Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\p
             '/qn'
             '/norestart'
         )
+        
+        while (((New-Object -ComObject "Microsoft.Update.Installer").isbusy) -or ((Get-Process msiexec -ErrorAction SilentlyContinue).count -gt 1)) {
+            Start-Sleep -Seconds 10
+        }
+        #Check to make sure that updates and msiexec aren't currently busy
+        #Sleep until they are not
+        
         Start-Process -FilePath "$env:systemroot\system32\msiexec.exe" -ArgumentList $Arguments -Wait
-        #Not all that safe. Assumes that Msiexec isn't already in the middle of something and that updates aren't running
-        #I have code to check for that somewhere but I can't remember where currently
+        #Actually install
+
         Remove-Item -Path "$env:TEMP\$MSI"
+        #Clean up after ourselves
     }
     Else {
         Write-Error -Message "Something went wrong downloading the latest pwsh msi from https://www.github.com$Link" -RecommendedAction 'Install it manually' -Category ObjectNotFound -ErrorAction Stop
