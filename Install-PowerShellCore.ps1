@@ -19,6 +19,8 @@ If (-not (Test-Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\p
             '/norestart'
         )
         Start-Process -FilePath "$env:systemroot\system32\msiexec.exe" -ArgumentList $Arguments -Wait
+        #Not all that safe. Assumes that Msiexec isn't already in the middle of something and that updates aren't running
+        #I have code to check for that somewhere but I can't remember where currently
         Remove-Item -Path "$env:TEMP\$MSI"
     }
     Else {
