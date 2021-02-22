@@ -19,6 +19,7 @@ If (-not (Test-Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\p
             '/norestart'
         )
         Start-Process -FilePath "$env:systemroot\system32\msiexec.exe" -ArgumentList $Arguments -Wait
+        Remove-Item -Path "$env:TEMP\$MSI"
     }
     Else {
         Write-Error -Message "Something went wrong downloading the latest pwsh msi from https://www.github.com$Link" -RecommendedAction 'Install it manually' -Category ObjectNotFound -ErrorAction Stop
